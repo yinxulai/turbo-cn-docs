@@ -1,13 +1,13 @@
 import { Tabs, Tab } from "../../../../components/Tabs";
 import Callout from "../../../../components/Callout";
 
-# Building your App
+# 编译你的 App
 
-Unless your monorepo is only used for [publishing packages to npm](/repo/docs/handbook/publishing-packages), it will likely contain at least one application. Coordinating your app's builds with Turborepo can lead to some extraordinary gains in speed.
+除非您的 monorepo 仅用于 [将包发布到 npm](/repo/docs/handbook/publishing-packages)，否则它可能至少包含一个应用程序。 使用 Turborepo 协调您的应用程序构建可以带来一些非凡的速度提升。
 
-## Setting up the build
+## 配置编译项
 
-Turborepo works by keeping your workspace tasks where they belong - in each workspace's `package.json`. Let's imagine you have a monorepo that looks like this:
+Turborepo 的工作原理是将您的工作空间任务保留在它们所属的位置 - 在每个工作空间的 `package.json` 中。 假设您有一个如下所示的 monorepo：
 
 ```
 ├── apps
@@ -17,7 +17,7 @@ Turborepo works by keeping your workspace tasks where they belong - in each work
 └── turbo.json
 ```
 
-Your `apps/web/package.json` should have a `build` script inside:
+你的 `apps/web/package.json` 里面应该有一个 `build` 脚本：
 
 <Tabs items={['Next.js', 'Vite']} storageKey="selected-framework">
   <Tab>
@@ -40,7 +40,7 @@ Your `apps/web/package.json` should have a `build` script inside:
   </Tab>
 </Tabs>
 
-Inside `turbo.json`, you can add `build` to the pipeline.
+在 `turbo.json` 中，您可以将 `build` 添加到管道中。
 
 <Tabs items={['Next.js', 'Vite']} storageKey="selected-framework">
   <Tab>
@@ -69,11 +69,11 @@ Inside `turbo.json`, you can add `build` to the pipeline.
 
 <Callout type="info">
 
-We configure the `outputs` so that we can enable [caching](/repo/docs/core-concepts/caching) - an extremely powerful feature of Turborepo that can skip tasks that have been done before.
+我们配置 `outputs` 以便我们可以启用 [caching](/repo/docs/core-concepts/caching) - Turborepo 的一个非常强大的功能，可以跳过以前完成的任务。
 
 </Callout>
 
-Now, add a script to your root `package.json`:
+现在，将脚本添加到您的根 `package.json`：
 
 ```json filename="package.json"
 {
@@ -83,4 +83,4 @@ Now, add a script to your root `package.json`:
 }
 ```
 
-This means that running `build` from root using your package manager will build all of the apps in the repository. Thanks to Turborepo's task cache, you can end up with extremely fast build times.
+这意味着使用包管理器从根目录运行 `build` 将构建存储库中的所有应用程序。 多亏了 Turborepo 的任务缓存，您最终可以获得极快的构建时间。

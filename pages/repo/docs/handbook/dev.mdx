@@ -1,27 +1,27 @@
 import { Tabs, Tab } from '../../../../components/Tabs'
 import Callout from '../../../../components/Callout'
 
-# Development tasks in a Monorepo
+# Monorepo 中的开发任务
 
-The vast majority of development workflows look like this:
+绝大多数开发工作流程如下所示：
 
-1. Open a repository
-2. Run a `dev` task while they develop
-3. At the end of the day, shut down the `dev` task and close the repository.
+1. 打开一个仓库
+2. 在开发过程中运行一个 `dev` 任务
+3. 在一天结束的时候，关闭 `dev` 任务并关闭存储库。
 
-`dev` will likely be the most frequently run task in your repository, so getting it right is important.
+`dev` 可能是您的存储库中运行最频繁的任务，因此正确执行它很重要。
 
-## Types of `dev` tasks
+## `dev` 任务的类型
 
-`dev` tasks come in many shapes and sizes:
+`dev` 任务有多种类型：
 
-1. Running a local development server for a web app
-1. Running [`nodemon`](https://www.npmjs.com/package/nodemon) to re-run a backend process every time code changes
-1. Running tests in `--watch` mode
+1. 为 Web 应用程序运行本地开发服务器
+1. 每次代码发生更改时运行 [`nodemon`](https://www.npmjs.com/package/nodemon) 重新运行后端进程
+1. 在 `--watch` 模式下运行测试
 
-## Setup with Turborepo
+## 在 Turborepo 中配置
 
-You should specify your `dev` task like this in your `turbo.json`.
+你应该在你的 `turbo.json` 中指定你的 `dev` 任务。
 
 ```json filename="turbo.json"
 {
@@ -33,11 +33,11 @@ You should specify your `dev` task like this in your `turbo.json`.
 }
 ```
 
-Since `dev` tasks don't produce outputs, `outputs` is empty. `dev` tasks are also unique in that you rarely want to [cache](/repo/docs/core-concepts/caching) them, so we set `cache` as `false`.
+由于 `dev` 任务不产生输出，`outputs` 是空的。 `dev` 任务的独特之处还在于您很少希望 [缓存](/repo/docs/core-concepts/caching) 它们，因此我们将 `cache` 设置为 `false`。
 
-### Setting up `package.json`
+### 更新 `package.json`
 
-You should also provide a `dev` task in your root `package.json`:
+你还应该在你的根 `package.json` 中提供一个 `dev` 任务：
 
 ```json filename="package.json"
 {
@@ -47,13 +47,13 @@ You should also provide a `dev` task in your root `package.json`:
 }
 ```
 
-This enables developers to run the task directly from their normal task runner.
+这使开发人员可以直接像他们往常一样从 package.json 运行任务。
 
-## Running tasks _before_ `dev`
+## 运行 `dev` _之前_ 
 
-In some workflows, you'll want to run tasks _before_ you run your `dev` task. For instance, generating code or running a `db:migrate` task.
+在某些工作流程中，您需要在运行 `dev` 任务 _之前_ 运行一些任务。例如，`codegen` 或 `db:migrate` 任务。
 
-In these cases, use [`dependsOn`](/repo/docs/core-concepts/running-tasks#in-the-same-workspace) to say that any `codegen` or `db:migrate` tasks should be run _before_ `dev` is run.
+在这些情况下，使用 [`dependsOn`](/repo/docs/core-concepts/running-tasks#in-the-same-workspace) 表示任何 `codegen` 或 `db:migrate` 任务都应该在运行 `dev`  _之前_ 运行。
 
 ```json filename="turbo.json"
 {
@@ -72,7 +72,7 @@ In these cases, use [`dependsOn`](/repo/docs/core-concepts/running-tasks#in-the-
 }
 ```
 
-Then, in your app's `package.json`:
+然后，在您应用的 `package.json` 中：
 
 ```json filename="apps/web/package.json"
 {
@@ -87,27 +87,27 @@ Then, in your app's `package.json`:
 }
 ```
 
-This means that users of your `dev` task _don't need to worry about codegen or migrating their database_ - it gets handled for them before their development server even starts.
+这意味着执行 `dev` 任务的用户 _不需要担心 `codegen` 或 `db:migrate`_ — 甚至在他们的开发服务器启动之前就已经为他们处理好了。
 
-## Running `dev` only in certain workspaces
+## 仅执行特定的一些工作空间的 `dev` 命令
 
-To run a `dev` task in only certain workspaces, you should use the [`--filter` syntax](/repo/docs/core-concepts/monorepos/filtering). For example:
+要仅在某些工作区中运行 `dev` 任务，您应该使用 [`--filter` 语法](/repo/docs/core-concepts/monorepos/filtering)。 例如：
 
 ```bash
 turbo run dev --filter docs
 ```
 
-Will only run `dev` in the workspace named `docs`.
+只会在名为 `docs` 的工作区中运行 `dev`。
 
-## Using environment variables
+## 使用环境变量
 
-While developing, you'll often need to use environment variables. These let you customize the behavior of your program - for instance, pointing to a different `DATABASE_URL` in development and production.
+在开发过程中，您经常需要使用环境变量。 这些允许您自定义程序的行为 - 例如，在开发和生产中指向不同的 `DATABASE_URL`。
 
-We recommend using a library called [`dotenv-cli`](https://www.npmjs.com/package/dotenv-cli) to solve this problem.
+我们建议使用名为 [`dotenv-cli`](https://www.npmjs.com/package/dotenv-cli) 的库来解决此问题。
 
-### Tutorial
+### 教程
 
-1. Install `dotenv-cli` in your [root workspace](/docs/handbook/what-is-a-monorepo#the-root-workspace):
+1. 在您的 [根工作区](/docs/handbook/what-is-a-monorepo#the-root-workspace) 中安装 `dotenv-cli`：
 
 <Tabs items={['npm', 'yarn', 'pnpm']} storageKey="selected-pkg-manager">
   <Tab>
@@ -130,7 +130,7 @@ We recommend using a library called [`dotenv-cli`](https://www.npmjs.com/package
   </Tab>
 </Tabs>
 
-2. Add a `.env` file to your root workspace:
+2. 将 `.env` 文件添加到您的根工作区：
 
 ```diff
   ├── apps/
@@ -140,13 +140,13 @@ We recommend using a library called [`dotenv-cli`](https://www.npmjs.com/package
   └── turbo.json
 ```
 
-Add any environment variables you need to inject:
+2. 添加您需要注入的任何环境变量：
 
 ```txt filename=".env"
 DATABASE_URL=my-database-url
 ```
 
-3. Inside your root `package.json`, add a `dev` script. Prefix it with `dotenv` and the `--` argument separator:
+3. 在你的根 `package.json` 中，添加一个 `dev` 脚本。 使用 `dotenv` 和 `--` 参数分隔符作为前缀：
 
 ```json
 {
@@ -156,9 +156,9 @@ DATABASE_URL=my-database-url
 }
 ```
 
-This will extract the environment variables from `.env` before running `turbo run dev`.
+这将在运行 `turbo run dev` 之前从 `.env` 中提取环境变量。
 
-4. Now, you can run your dev script:
+4. 现在，您可以运行您的开发脚本：
 
 <Tabs items={['npm', 'yarn', 'pnpm']} storageKey="selected-pkg-manager">
   <Tab>
@@ -178,8 +178,8 @@ This will extract the environment variables from `.env` before running `turbo ru
   </Tab>
 </Tabs>
 
-And your environment variables will be populated! In Node.js, these are available on `process.env.DATABASE_URL`.
+您的环境变量将被填充！在 Node.js 中，这些在 `process.env.DATABASE_URL` 上可用。
 
 <Callout>
-  You should also [add your environment variables](/docs/core-concepts/caching#altering-caching-based-on-environment-variables) to your `turbo.json` if you're using them to build your app.
+  如果您使用它们来构建您的应用程序，您还应该 [添加您的环境变量](/docs/core-concepts/caching#altering-caching-based-on-environment-variables) 到您的 `turbo.json` 中。
 </Callout>

@@ -1,14 +1,14 @@
 {
-  "what-is-a-monorepo": "What is a Monorepo?",
-  "package-installation": "Package Installation",
-  "workspaces": "Workspaces",
-  "migrating-to-a-monorepo": "Migrating to a Monorepo",
-  "dev": "Development Tasks",
-  "building-your-app": "Building Your App",
-  "deploying-with-docker": "Deploying with Docker",
-  "sharing-code": "Sharing Code",
-  "linting": "Linting",
-  "testing": "Testing",
-  "publishing-packages": "Publishing Packages",
-  "troubleshooting": "Troubleshooting"
+  "what-is-a-monorepo": "什么是 Monorepo?",
+  "package-installation": "安装包",
+  "workspaces": "工作空间 (Workspaces)",
+  "migrating-to-a-monorepo": "迁移到 Monorepo",
+  "dev": "开发任务",
+  "building-your-app": "编译你的 APP",
+  "deploying-with-docker": "通过 Docker 部署",
+  "sharing-code": "共享代码",
+  "linting": "代码风格检查",
+  "testing": "测试",
+  "publishing-packages": "发布包",
+  "troubleshooting": "故障排除"
 }

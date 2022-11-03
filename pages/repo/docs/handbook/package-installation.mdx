@@ -2,27 +2,27 @@ import Callout from "../../../../components/Callout";
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
 import { Tabs, Tab } from "../../../../components/Tabs";
 
-# Package Installation
+# 包安装
 
-A package manager (like `npm`) handles two things for you: [managing workspaces](/repo/docs/handbook/workspaces) and installing packages.
+包管理器（如 `npm`）为您处理两件事：[管理工作区](/repo/docs/handbook/workspaces) 和安装包。
 
-Turborepo is compatible with four package managers:
+Turborepo 与四个包管理器兼容：
 
 - [npm](https://docs.npmjs.com/cli/v8/using-npm/workspaces#description)
 - [pnpm](https://pnpm.io/workspaces)
 - [Yarn 1](https://classic.yarnpkg.com/lang/en/docs/workspaces/)
-- Yarn >=2 (docs coming soon)
+- Yarn >=2 (文档即将推出)
 
-You should use whichever you feel most comfortable with - but **if you're a monorepo beginner, we recommend npm**.
+你应该使用你觉得最舒服的那个——但是 **如果你是一个 monorepo 初学者，我们推荐 npm**。
 
-If you're **comfortable with monorepos, we recommend pnpm**. It's faster and offers some useful CLI options like `--filter`.
+如果您**对 monorepos 感到满意，我们推荐 pnpm**。 它速度更快，并提供了一些有用的 CLI 选项，例如 `--filter`。
 
-## Installing packages
+## 安装包
 
-When you first clone or create your monorepo, you'll need to:
+当你第一次克隆或创建你的 monorepo 时，你需要：
 
-1. Make sure you're in the root directory of your monorepo
-2. Run the install command:
+1.确保你在你的monorepo的根目录中
+2. 运行安装命令：
 
 <Tabs items={["npm", "yarn", "pnpm"]} storageKey="selected-pkg-manager">
   <Tab>```bash npm install ```</Tab>
@@ -30,11 +30,11 @@ When you first clone or create your monorepo, you'll need to:
   <Tab>```bash pnpm install ```</Tab>
 </Tabs>
 
-You'll now see `node_modules` folders appear in the root of your repository, and in each workspace.
+您现在将看到 `node_modules` 文件夹出现在存储库的根目录和每个工作区中。
 
-## Adding/removing/upgrading packages
+## 添加/删除/升级包
 
-You can add, remove and upgrade packages from within your monorepo using your package manager's built-in commands:
+您可以使用包管理器的内置命令从 monorepo 中添加、删除和升级包：
 
 <Tabs items={['npm', 'yarn', 'pnpm']} storageKey="selected-pkg-manager">
   <Tab>

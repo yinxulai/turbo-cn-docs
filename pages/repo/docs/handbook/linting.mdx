@@ -1,15 +1,15 @@
 # Linting in a monorepo
 
-Linting in a monorepo can be tricky. Most of your workspaces will likely contain code that needs to be linted - so working out the most efficient way to lint them is tough.
+在 monorepo 中进行 Linting 可能会很棘手。 您的大多数工作区可能包含需要 lint 的代码 - 因此找出最有效的方法来 lint 是很困难的。
 
-In this guide, we'll propose a method that plays to Turborepo's strengths:
+在本指南中，我们将提出一种发挥 Turborepo 优势的方法：
 
-- Running lint tasks _inside_ the workspaces, not from root
-- Sharing as much config as possible between workspaces
+- 从内部的工作空间中运行 lint 任务，而不是从根
+- 在工作区之间共享尽可能多的配置
 
-## Running tasks
+## 运行任务
 
-We recommend specifying a single `lint` task inside your `turbo.json`.
+我们建议在 `turbo.json` 中指定一个 `lint` 任务。
 
 ```json filename="turbo.json"
 {
@@ -21,7 +21,7 @@ We recommend specifying a single `lint` task inside your `turbo.json`.
 }
 ```
 
-Then, inside **each workspace that needs to be linted**, add a `lint` script. We'll use TypeScript as an example:
+然后，在**每个需要 lint 的工作区**中，添加一个 `lint` 脚本。 我们将使用 TypeScript 作为示例：
 
 ```json filename="packages/*/package.json"
 {
@@ -31,22 +31,22 @@ Then, inside **each workspace that needs to be linted**, add a `lint` script. We
 }
 ```
 
-This pattern has two benefits:
+这种模式有两个好处：
 
-- [**Parallelization**](/repo/docs/core-concepts/running-tasks): the lint tasks will be run concurrently, speeding them up
-- [**Caching**](/repo/docs/core-concepts/caching): `lint` tasks will only be re-run on workspaces that have changed
+- [**并行**](/repo/docs/core-concepts/running-tasks): lint 任务将同时运行，加速它们
+- [**缓存**](/repo/docs/core-concepts/caching): `lint` 任务只会在已更改的工作空间上重新运行
 
-This means you can lint your entire repo using one command:
+这意味着您可以使用一个命令对整个 repo 进行 lint：
 
 ```bash
 turbo run lint
 ```
 
-## Sharing config files
+## 共享配置文件
 
-Sharing configuration across a monorepo helps keep the development experience consistent. Most linters will have a system for sharing config, or extending config across different files.
+在 monorepo 中共享配置有助于保持开发体验的一致性。 大多数 linter 都有一个用于共享配置或跨不同文件扩展配置的系统。
 
-So far, we've built guides for sharing config in:
+到目前为止，我们已经构建了用于共享配置的指南：
 
 - [TypeScript](/repo/docs/handbook/linting/typescript)
 - [ESLint](/repo/docs/handbook/linting/eslint)

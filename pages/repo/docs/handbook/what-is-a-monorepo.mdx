@@ -1,43 +1,43 @@
 import { Tabs, Tab } from "../../../../components/Tabs";
 
-# What is a Monorepo?
+# 什么是 Monorepo?
 
-A monorepo is a collection of many different apps and packages in a single codebase.
+多个不同应用程序和包通过一个仓库来管理的方式我们称之为 monorepo。
 
-The alternative setup is called **a polyrepo** - multiple codebases which are published and versioned separately.
+此外还有一种方式我们称为 **polyrepo**，指不同的应用程序和包分别通过不同的仓库来管理，分别管理版本和发布。
 
-## Sharing code
+## 共享代码
 
-### In a polyrepo
+### 在 polyrepo 模式中
 
-In a polyrepo setup, the process for sharing code between applications is relatively lengthy.
+在 `polyrepo` 模式下，在应用程序或包之间共享代码的方式相对麻烦。
 
-Imagine that you have three separate repositories - `app`, `docs`, and `shared-utils`. Both `app` and `docs` depend on `shared-utils`, which is published as a package on npm.
+想象一下，您有三个独立的存储库 - `app`、`docs` 和 `shared-utils`。 `app` 和 `docs` 都依赖于 `shared-utils`，它作为一个包发布在 npm 上。
 
-Let's say a bug in `shared-utils` is causing a critical issue in both `app` and `docs`. You'll need to:
+假设 `shared-utils` 中的错误导致 `app` 和 `docs` 出现严重问题。 您需要：
 
-1. Make a commit in `shared-utils` fixing the error
-2. Run a `publish` task inside `shared-utils` to publish it to npm
-3. Make a commit in `app` bumping the version of the `shared-utils` dependency
-4. Make a commit in `docs` bumping the version of the `shared-utils` dependency
-5. `app` and `docs` are now ready to be deployed.
+1. 在 `shared-utils` 中提交修复错误
+2. 在 `shared-utils` 中运行 `publish` 任务将其发布到 npm
+3. 在 `app` 中提交会影响 `shared-utils` 依赖项的版本
+4. 在 `docs` 中提交会影响 `shared-utils` 依赖项的版本
+5. `app` 和 `docs` 现在可以部署了。
 
-The more apps you have that depend on `shared-utils`, the longer this process takes. It can be extremely arduous.
+您拥有的依赖于 `shared-utils` 的应用程序越多，此过程所需的时间就越长。 这可能非常艰巨。
 
-### In a monorepo
+### 在 monorepo 模式中
 
-In a monorepo setup, `shared-utils` would be _in the same codebase_ as `app` and `docs`. This makes the process very simple:
+在 monorepo 设置中，`shared-utils` 将与 `app` 和 `docs` _在同一个仓库中_。 这使得该过程非常简单：
 
-1. Make a commit in `shared-utils` fixing the error
-2. `app` and `docs` are now ready to be deployed.
+1. 在 `shared-utils` 中提交修复错误
+2. `app` 和 `docs` 现在可以部署了。
 
-No versioning is required, because `app` and `docs` don't depend on the version of `shared-utils` in npm - they depend on the **version that's in the codebase**.
+不需要版本控制，因为 `app` 和 `docs` 不依赖于 npm 中的 `shared-utils` 的版本——它们依赖于代码库中的**版本**。
 
-This makes it possible to create single commits which fix bugs in multiple apps and packages at once. This can be an enormous gain in speed for teams.
+这使得创建单个提交成为可能，从而一次修复多个应用程序和包中的错误。 对于团队来说，这可以极大地提高速度。
 
-## How do monorepos work?
+## monorepos 是如何工作的?
 
-The main building block of the monorepo is the [workspace](/repo/docs/handbook/workspaces). Each application and package you build will be in its own workspace, with its own `package.json`. As you'll learn from our guide, workspaces can **depend on each other**, meaning your `docs` workspace can depend on `shared-utils`:
+monorepo 的主要组件是 [工作空间(workspace)](/repo/docs/handbook/workspaces)。 您构建的每个应用程序和包都将位于其自己的工作空间中，并带有自己的`package.json`。 正如您将从我们的指南中了解到的，工作空间可以**相互依赖**，这意味着您的 `docs` 工作空间可以依赖于 `shared-utils`：
 
 <Tabs items={['npm', 'yarn', 'pnpm']} storageKey="selected-pkg-manager">
   <Tab>
@@ -74,12 +74,12 @@ The main building block of the monorepo is the [workspace](/repo/docs/handbook/w
   </Tab>
 </Tabs>
 
-Workspaces are managed by the same CLI which [installs your dependencies](/repo/docs/handbook/package-installation).
+工作区由 [安装您的依赖项] (/repo/docs/handbook/package-installation) 的相同 CLI 管理。
 
-### The root workspace
+### 根工作空间 (root workspace)
 
-You'll also have a root workspace - a `package.json` in the root folder of your codebase. This is a useful place for:
+您还将拥有一个根工作区 - 在您的代码库的根文件夹中的 `package.json`。 这是一个有用的地方：
 
-1. Specifying dependencies which are present across your entire monorepo
-1. Adding tasks that operate on the _whole_ monorepo, not just individual workspaces
-1. Adding documentation on how to use the monorepo
+1. 指定整个 monorepo 中存在的依赖项
+2. 添加在 _所有的_ monorepo 上运行的任务，而不仅仅是单个工作空间
+3. 添加有关如何使用 monorepo 的文档

@@ -1,13 +1,13 @@
 import { Tabs, Tab } from "../../../../components/Tabs";
 import Callout from "../../../../components/Callout";
 
-# Testing in a Monorepo
+# 在 Monorepo 中测试
 
-Along with linting and building, testing is a crucial part of a production-ready monorepo. Whether you're using end-to-end tests or a unit test suite, integrating them with Turborepo will lead to enormous speed-ups.
+除了 linting 和构建，测试是生产就绪的 monorepo 的关键部分。 无论您使用的是端到端测试还是单元测试套件，将它们与 Turborepo 集成都会带来巨大的加速。
 
-## Working with test runners
+## 与测试运行器一起工作
 
-Let's say we have a monorepo that looks like this:
+假设我们有一个如下所示的 monorepo：
 
 ```
 ├── apps
@@ -18,7 +18,7 @@ Let's say we have a monorepo that looks like this:
         └── package.json
 ```
 
-Both `apps/web` and `packages/shared` have their own test suite. Their `package.json` files look like this:
+`apps/web` 和 `packages/shared` 都有自己的测试套件。 他们的 `package.json` 文件如下所示：
 
 <Tabs items={["Jest", "Vitest"]} storageKey="selected-test-runner">
   <Tab>
@@ -41,7 +41,7 @@ Both `apps/web` and `packages/shared` have their own test suite. Their `package.
     </Tab>
 </Tabs>
 
-Inside the root `turbo.json`, we recommend setting up a `test` task in your [pipeline](/repo/docs/core-concepts/running-tasks):
+在根 `turbo.json` 中，我们建议在您的 [管道](/repo/docs/core-concepts/running-tasks) 中设置 `test` 任务：
 
 ```json filename="turbo.json"
 {
@@ -53,7 +53,7 @@ Inside the root `turbo.json`, we recommend setting up a `test` task in your [pip
 }
 ```
 
-Now, inside your root `package.json`, add a `test` script:
+现在，在你的根 `package.json` 中，添加一个 `test` 脚本：
 
 ```json filename="package.json"
 {
@@ -63,19 +63,19 @@ Now, inside your root `package.json`, add a `test` script:
 }
 ```
 
-Now, you can run `test` using your package manager and have Turborepo test the entire repository.
+现在，您可以使用包管理器运行 `test` 并让 Turborepo 测试整个存储库。
 
-Because of Turborepo's [caching](/repo/docs/core-concepts/caching), this also means that only repositories that have changed files will be tested - resulting in a lot of time saved.
+由于 Turborepo 的 [caching](/repo/docs/core-concepts/caching)，这也意味着只测试已更改文件的存储库 - 从而节省了大量时间。
 
-## Running tests in watch mode
+## 在 Watch 模式下运行测试
 
-When you run your test suite normally, it completes and outputs to `stdout`. This means you can [cache it](/repo/docs/core-concepts/caching) with Turborepo.
+当您正常运行测试套件时，它会完成并输出到“stdout”。 这意味着您可以使用 Turborepo [缓存它](/repo/docs/core-concepts/caching)。
 
-But when you run your tests in watched mode, the process never exits. This makes a watch task more like a [development task](/repo/docs/handbook/dev).
+但是当您在监视模式下运行测试时，该过程永远不会退出。 这使得监视任务更像 [开发任务](/repo/docs/handbook/dev)。
 
-Because of this difference, we recommend specifying **two separate Turborepo tasks**: one for running your tests, and one for running them in watch mode.
+由于这种差异，我们建议指定**两个单独的 Turborepo 任务**：一个用于运行测试，另一个用于在监视模式下运行它们。
 
-Here's an example:
+这是一个例子：
 
 <Tabs items={["Jest", "Vitest"]} storageKey="selected-test-runner">
   <Tab>

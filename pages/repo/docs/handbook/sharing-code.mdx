@@ -1,25 +1,25 @@
 import Callout from "../../../../components/Callout";
 
-# Sharing Code in a monorepo
+# 在 monorepo 中共享代码
 
-Monorepos let you share code across applications without friction. To do that, you'll be building **packages** to share code between your apps.
+Monorepos 可让您跨应用程序共享代码而不会产生摩擦。为此，您将构建 **packages** 以在您的应用程序之间共享代码。
 
-## What is a package?
+##什么是包？
 
-The word 'package' has a double meaning when it comes to monorepos. It can refer to either of these:
+当涉及到 monorepos 时，“包”这个词有双重含义。它可以引用以下任何一个：
 
-1. A set of files you download from a registry into your `node_modules`, via a package manager like `npm`.
-2. A workspace containing code that can be shared between applications - by convention usually inside `/packages`.
+1. 通过像 `npm` 之类的包管理器，您从注册表下载到您的 `node_modules` 的一组文件。
+2. 一个包含可以在应用程序之间共享的代码的工作区——按照惯例，通常在 `/packages` 中。
 
-This dual meaning can be very confusing to folks new to the monorepo scene. You're likely very familiar with [package installation](/repo/docs/handbook/package-installation), but not so familiar with [workspaces](/repo/docs/handbook/workspaces).
+对于刚接触 monorepo 场景的人来说，这种双重含义可能会非常令人困惑。您可能对 [包安装](/repo/docs/handbook/package-installation) 非常熟悉，但对 [workspaces](/repo/docs/handbook/workspaces) 不太熟悉。
 
-The fact is that they're very similar. A package is just a piece of shared code. Except that _installed packages_ live in your `node_modules`, and _local packages_ lives in a workspace - likely in your `/packages` folder.
+事实是它们非常相似。包只是一段共享代码。除了 _installed packages_ 存在于您的 `node_modules` 中，而 _local packages_ 存在于工作空间中 - 可能在您的 `/packages` 文件夹中。
 
-## Anatomy of a package
+## 封装剖析
 
-Each package contains a `package.json`. You're likely familiar with using these to manage dependencies and scripts in your applications.
+每个包都包含一个`package.json`。您可能熟悉使用这些来管理应用程序中的依赖项和脚本。
 
-However, you may not have noticed the `main` and `name` fields before:
+但是，您之前可能没有注意到 `main` 和 `name` 字段：
 
 ```jsonc filename="packages/my-lib/package.json"
 {
@@ -32,7 +32,7 @@ However, you may not have noticed the `main` and `name` fields before:
 }
 ```
 
-Both of these fields are important for deciding **how this package behaves when it's imported**. For instance, if `index.js` has some exports:
+这两个字段对于决定**此包在导入时的行为方式** 都很重要。 例如，如果 `index.js` 有一些导出：
 
 ```js filename="packages/my-lib/index.js"
 export const myFunc = () => {
@@ -40,7 +40,7 @@ export const myFunc = () => {
 };
 ```
 
-And we import this file into one of our apps:
+我们将此文件导入我们的一个应用程序中：
 
 ```ts filename="apps/web/pages/index.jsx"
 import { myFunc } from "my-lib";
@@ -48,24 +48,24 @@ import { myFunc } from "my-lib";
 myFunc(); // Hello!
 ```
 
-Then we'll be able to use the code inside the `my-lib` folder inside our applications.
+然后我们就可以在我们的应用程序中使用 `my-lib` 文件夹中的代码了。
 
-To summarize, **each package must have a `name` and a `main`** declared inside its `package.json`.
+总而言之，**每个包都必须在其 `package.json` 中声明一个 `name` 和 `main`**。
 
 <Callout type="info">
 
-Package resolution in `package.json` is a very complicated topic, and we can't do justice to it here. Other fields in your `package.json` may take precedence over `main` depending on how the package is being imported.
+`package.json` 中的包解析是一个非常复杂的话题，我们在这里不能公正地处理它。 `package.json` 中的其他字段可能优先于 `main`，具体取决于导入包的方式。
 
-Check the [npm docs](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main) for a guide.
+查看 [npm 文档](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main) 获取指南。
 
-For our purposes, using `main` will be good enough.
+就我们的目的而言，使用 `main` 就足够了。
 
 </Callout>
 
-## Next steps
+## 下一步
 
-We're going to introduce two styles of packages - **internal** packages and **external** packages:
+我们将介绍两种样式的包 - **internal** 包和 **external** 包：
 
-[**Internal** packages](/repo/docs/handbook/sharing-code/internal-packages) are intended to only be used inside the monorepo where they're housed. They are relatively simple to set up, and if your project is closed source they will be the most useful to you.
+[**Internal** packages](/repo/docs/handbook/sharing-code/internal-packages) 旨在仅在它们所在的 monorepo 内部使用。 它们的设置相对简单，如果您的项目是封闭源代码，它们将对您最有用。
 
-[**External** packages](/repo/docs/handbook/publishing-packages) are bundled and sent to a package registry. This is useful for design systems, shared utility libraries or any open source work. However, they introduce more complexity around bundling, versioning and publishing.
+[**外部** 包](/repo/docs/handbook/publishing-packages) 被捆绑并发送到包注册表。 这对于设计系统、共享实用程序库或任何开源工作很有用。 但是，它们在捆绑、版本控制和发布方面引入了更多复杂性。

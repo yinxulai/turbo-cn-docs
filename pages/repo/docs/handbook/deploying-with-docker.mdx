@@ -1,14 +1,14 @@
 import Callout from "../../../../components/Callout";
 
-# Deploying with Docker
+# 通过 Docker 部署
 
-Building a [Docker](https://www.docker.com/) image is a common way to deploy all sorts of applications. However, doing so from a monorepo has several challenges.
+构建 [Docker](https://www.docker.com/) 镜像是部署各种应用程序的常用方法。 然而，从 monorepo 中这样做有几个挑战。
 
-## The problem
+## 问题
 
-**TL;DR:** In a monorepo, unrelated changes can make Docker do unnecessary work when deploying your app.
+**TL;DR:** 在 monorepo 中，不相关的更改会使 Docker 在部署应用程序时做不必要的工作。
 
-Let's imagine you have a monorepo that looks like this:
+假设您有一个如下所示的 monorepo：
 
 ```txt
 ├── apps
@@ -21,7 +21,7 @@ Let's imagine you have a monorepo that looks like this:
 └── package-lock.json
 ```
 
-You want to deploy `apps/docs` using Docker, so you create a Dockerfile:
+你想使用 Docker 部署 `apps/docs`，所以你创建了一个 Dockerfile：
 
 ```docker filename="Dockerfile"
 FROM node:16
@@ -45,44 +45,44 @@ EXPOSE 8080
 CMD [ "node", "apps/docs/server.js" ]
 ```
 
-This will copy the root `package.json` and the root lockfile to the docker image. Then, it'll install dependencies, copy the app source and start the app.
+这会将 `root package.json` 和 `root lockfile` 复制到 docker 映像。然后，它将安装依赖项，复制应用程序源文件并启动应用程序。
 
-You should also create a `.dockerignore` file to prevent node_modules from being copied in with the app's source.
+您还应该创建一个 `.dockerignore` 文件以防止 node_modules 被复制到应用程序的源代码中。
 
 ```txt filename=".dockerignore"
 node_modules
 npm-debug.log
 ```
 
-### The lockfile changes too often
+### lockfile 变动过于频繁
 
-Docker is pretty smart about how it deploys your apps. Just like Turbo, it tries to do as [little work as possible](http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/).
+Docker 在部署应用程序方面非常聪明。 就像 Turbo 一样，它试图做 [尽可能少的工作](http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/)。
 
-In our Dockerfile's case, it will only run `npm install` if the files it has in its image are _different_ from the previous run. If not, it'll restore the `node_modules` directory it had before.
+在我们的 Dockerfile 的例子中，它只会在它的镜像中的文件与之前的运行 _不同_ 时才会运行 `npm install`。如果没有，它将恢复之前的 `node_modules` 目录。
 
-This means that whenever `package.json`, `apps/docs/package.json` or `package-lock.json` change, the docker image will run `npm install`.
+这意味着每当 `package.json`、`apps/docs/package.json` 或 `package-lock.json` 更改时，docker 映像将运行 `npm install`。
 
-This sounds great - until we realise something. The `package-lock.json` is _global_ for the monorepo. That means that **if we install a new package inside `apps/web`, we'll cause `apps/docs` to redeploy**.
+这听起来很棒——直到我们意识到一些事情。 `package-lock.json` 是 monorepo 的 _global_ 。 这意味着**如果我们在 `apps/web` 中安装一个新包，我们将导致 `apps/docs` 重新部署**。
 
-In a large monorepo, this can result in a huge amount of lost time, as any change to a monorepo's lockfile cascades into tens or hundreds of deploys.
+在大型 monorepo 中，这可能会导致大量时间损失，因为对 monorepo 的锁定文件的任何更改都会级联成数十或数百次部署。
 
-## The solution
+## 解决方案
 
-The solution is to prune the inputs to the Dockerfile to only what is strictly necessary. Turborepo provides a simple solution - `turbo prune`.
+解决方案是将 Dockerfile 的输入修剪为仅严格必要的输入。 Turborepo 提供了一个简单的解决方案 - `turbo prune`。
 
 ```bash
 turbo prune --scope="docs" --docker
 ```
 
-Running this command creates a **pruned version of your monorepo** inside an `./out` directory. It only includes workspaces which `docs` depends on.
+运行此命令会在 `./out` 目录中创建一个 **修剪过的 monorepo** 版本。 它只包括 `docs` 依赖的工作空间。
 
-Crucially, it also **prunes the lockfile** so that only the relevant `node_modules` will be downloaded.
+至关重要的是，它还**修剪 lockfile**，以便仅下载相关的 `node_modules`。
 
-### The `--docker` flag
+### `--docker` 标记
 
-By default, `turbo prune` puts all relevant files inside `./out`. But to optimize caching with Docker, we ideally want to copy the files over in two stages.
+默认情况下，`turbo prune` 将所有相关文件放在 `./out` 中。 但是要使用 Docker 优化缓存，我们最好分两个阶段复制文件。
 
-First, we want to copy over only what we need to install the packages. When running `--docker`, you'll find this inside `./out/json`.
+首先，我们只想复制安装软件包所需的内容。 运行 `--docker` 时，您会在 `./out/json` 中找到它。
 
 ```txt
 out
@@ -98,17 +98,17 @@ out
 └── package-lock.json
 ```
 
-Afterwards, you can copy the files in `./out/full` to add the source files.
+之后，您可以复制 `./out/full` 中的文件以添加源文件。
 
-Splitting up **dependencies** and **source files** in this way lets us **only run `npm install` when dependencies change** - giving us a much larger speedup.
+以这种方式拆分**依赖项**和**源文件**让我们**仅在依赖项更改时运行`npm install`** - 给我们带来更大的加速。
 
 <Callout type="info">
-  Without `--docker`, all pruned files are placed inside `./out`.
+  如果没有 `--docker`，所有修剪过的文件都放在 `./out` 中。
 </Callout>
 
-### Example
+### 示例
 
-Our detailed [`with-docker` example](https://github.com/vercel/turbo/tree/main/examples/with-docker) goes into depth on how to utilise `prune` to its full potential. Here's the Dockerfile, copied over for convenience.
+我们详细的 [`with-docker` 示例](https://github.com/vercel/turbo/tree/main/examples/with-docker) 深入探讨了如何充分利用 `prune` 的潜力。 这是 Dockerfile，为方便起见复制过来。
 
 ```docker
 FROM node:alpine AS builder
